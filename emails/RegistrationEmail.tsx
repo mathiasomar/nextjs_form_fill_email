@@ -57,10 +57,10 @@ export function RegistrationEmail({ data }: { data: Registration }) {
             ["WhatsApp", f.whatsapp], ["Safaricom payment number", f.safaricom], ["Alternative number", f.alternativeNumber],
           ]} />
           <Block title="County Chairman" rows={[
-            ["Name", f.countyChairmanName], ["Code", f.countyChairmanCode], ["National ID", f.countyChairmanId], ["Phone", f.countyChairmanPhone],
+            ["Name", f.countyChairmanName], ["Code", f.countyChairmanCode], ["Phone", f.countyChairmanPhone],
           ]} />
           <Block title="Sub-County Representative" rows={[
-            ["Name", f.subCountyRepName], ["Code", f.subCountyRepCode], ["National ID", f.subCountyRepId], ["Phone", f.subCountyRepPhone],
+            ["Name", f.subCountyRepName], ["Code", f.subCountyRepCode], ["Phone", f.subCountyRepPhone],
           ]} />
           {data.spouses.map((sp, i) => (
             <Block key={i} title={`Spouse ${i + 1}`} rows={[["Name", sp.name], ["Phone", sp.phone]]} />
@@ -71,9 +71,9 @@ export function RegistrationEmail({ data }: { data: Registration }) {
             ]} />
           ))}
           <Block title={`Parents / guardian — ${f.parentStatus}`} rows={[
-            ["Father", f.father], ["Father ID", f.fatherId], ["Father phone", f.fatherPhone],
-            ["Mother", f.mother], ["Mother ID", f.motherId], ["Mother phone", f.motherPhone],
-            ["Guardian", f.guardian], ["Guardian ID", f.guardianId], ["Guardian phone", f.guardianPhone],
+            ["Father", f.father], ["Father phone", f.fatherPhone],
+            ["Mother", f.mother], ["Mother phone", f.motherPhone],
+            ["Guardian", f.guardian], ["Guardian phone", f.guardianPhone],
           ]} />
           {data.children.map((c, i) => (
             <Block key={i} title={`Child ${i + 1}`} rows={[

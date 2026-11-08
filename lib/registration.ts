@@ -22,8 +22,8 @@ const oneOf = (label: string, list: string[]) => z.string().refine((v) => list.i
 const TEXT_FIELDS: Record<string, string> = {
   memberName: "Full name", idno: "National ID number", birthCounty: "County of birth", birthSubCounty: "Sub-County of birth",
   birthDistrict: "District of birth", birthDivision: "Division of birth", birthLocation: "Location of birth", birthVillage: "Village of birth",
-  countyChairmanName: "County Chairman name", countyChairmanCode: "County Chairman code", countyChairmanId: "County Chairman ID number",
-  subCountyRepName: "Sub-County Representative name", subCountyRepCode: "Sub-County Representative code", subCountyRepId: "Sub-County Representative ID number",
+  countyChairmanName: "County Chairman name", countyChairmanCode: "County Chairman code",
+  subCountyRepName: "Sub-County Representative name", subCountyRepCode: "Sub-County Representative code",
   declarant: "Declarant name",
 };
 const PHONE_FIELDS: Record<string, string> = {
@@ -44,9 +44,9 @@ Object.assign(shape, {
   alternativeNumber: z.string().trim().refine((v) => v === "" || PHONE.test(v), "Alternative number is not valid"),
   birthSubLocation: text("Sub-Location of birth"),
   birthSubLocationOther: z.string().trim().max(200),
-  father: z.string().trim().max(200), fatherId: z.string().trim().max(50), fatherPhone: z.string().trim().max(30),
-  mother: z.string().trim().max(200), motherId: z.string().trim().max(50), motherPhone: z.string().trim().max(30),
-  guardian: z.string().trim().max(200), guardianId: z.string().trim().max(50), guardianPhone: z.string().trim().max(30),
+  father: z.string().trim().max(200), fatherPhone: z.string().trim().max(30),
+  mother: z.string().trim().max(200), motherPhone: z.string().trim().max(30),
+  guardian: z.string().trim().max(200), guardianPhone: z.string().trim().max(30),
   fatherDeceased: z.string().max(10), motherDeceased: z.string().max(10), totalOrphan: z.string().max(10),
   agree: oneOf("Declaration confirmation", ["on"]),
   photoDeclaration: oneOf("Selfie confirmation", ["on"]),
@@ -87,11 +87,11 @@ export async function parseRegistration(fd: FormData): Promise<ParseResult> {
   const fatherDead = total || f.fatherDeceased === "on";
   const motherDead = total || f.motherDeceased === "on";
   const need = (cond: boolean, keys: [string, string][]) => { if (cond) keys.forEach(([k, l]) => { if (!f[k]) errors.push(`${l} is required`); }); };
-  need(!fatherDead, [["father", "Father's name"], ["fatherId", "Father's ID number"], ["fatherPhone", "Father's phone"]]);
-  need(!motherDead, [["mother", "Mother's name"], ["motherId", "Mother's ID number"], ["motherPhone", "Mother's phone"]]);
-  need(total, [["guardian", "Guardian name"], ["guardianId", "Guardian ID number"], ["guardianPhone", "Guardian phone"]]);
+  need(!fatherDead, [["father", "Father's name"], ["fatherPhone", "Father's phone"]]);
+  need(!motherDead, [["mother", "Mother's name"], ["motherPhone", "Mother's phone"]]);
+  need(total, [["guardian", "Guardian name"], ["guardianPhone", "Guardian phone"]]);
   for (const [p, dead] of [["father", fatherDead], ["mother", motherDead]] as const) {
-    if (dead) { f[p] = "Deceased"; f[p + "Id"] = ""; f[p + "Phone"] = ""; }
+    if (dead) { f[p] = "Deceased"; f[p + "Phone"] = ""; }
   }
   f.parentStatus = total ? "Total orphan" : fatherDead || motherDead ? "Partial orphan" : "Both parents living";
 

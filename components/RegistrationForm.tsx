@@ -133,7 +133,6 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
         <div className="grid">
           <TextField id="countyChairmanName" label="County Chairman Name" required autoComplete="name" placeholder="Enter County Chairman full name" />
           <TextField id="countyChairmanCode" label="County Chairman Code" required placeholder="Enter County Chairman code" />
-          <TextField id="countyChairmanId" label="County Chairman National ID Number" required inputMode="numeric" placeholder="Enter County Chairman ID number" />
           <TextField id="countyChairmanPhone" label="County Chairman Phone Number" type="tel" required placeholder={PHONE} />
         </div>
       </section>
@@ -144,7 +143,6 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
           <TextField id="subCountyRepName" label="Sub-County Representative Name" required autoComplete="name" placeholder="Enter representative full name" />
           <TextField id="subCountyRepCode" label="Sub-County Representative Code Number" required placeholder="Enter representative code number" />
           <TextField id="subCountyRepPhone" label="Sub-County Representative Phone Number" type="tel" required placeholder={PHONE} />
-          <TextField id="subCountyRepId" label="Sub-County Representative National ID Number" required inputMode="numeric" placeholder="Enter representative ID number" />
         </div>
       </section>
 
@@ -231,12 +229,10 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
           <div className="grid">
             {!fatherDead && (<>
               <TextField id="father" label="Father's full name" required />
-              <TextField id="fatherId" label="Father's National ID number" required inputMode="numeric" />
               <TextField id="fatherPhone" label="Father's phone number" type="tel" required placeholder="+254..." />
             </>)}
             {!motherDead && (<>
               <TextField id="mother" label="Mother's full name" required />
-              <TextField id="motherId" label="Mother's National ID number" required inputMode="numeric" />
               <TextField id="motherPhone" label="Mother's phone number" type="tel" required placeholder="+254..." />
             </>)}
             <div className="field full"><label className="check"><input type="checkbox" name="fatherDeceased" checked={fatherDead} onChange={(e) => setFatherDead(e.target.checked)} /> Father is deceased (partial orphan)</label></div>
@@ -248,7 +244,6 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
             <strong>Total-orphan guardian details</strong>
             <div className="grid" style={{ marginTop: 10 }}>
               <TextField id="guardian" label="Guardian full name" required />
-              <TextField id="guardianId" label="Guardian National ID number" required />
               <TextField id="guardianPhone" label="Guardian phone number" type="tel" required />
             </div>
           </div>
