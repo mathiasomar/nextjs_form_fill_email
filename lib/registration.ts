@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { z } from "zod";
 import { ageFromDob } from "./age";
+import { normalizeDateInput } from "./date";
 import { CHILD_ADULT_AGE, MAX_FILE_BYTES, MAX_TOTAL_BYTES } from "./constants";
 import { NOT_LISTED } from "./locations";
 import { buildIdPdf } from "./pdf";
@@ -16,7 +17,10 @@ const EXT: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "
 
 const text = (label: string, max = 200) => z.string().trim().min(1, `${label} is required`).max(max, `${label} is too long`);
 const phone = (label: string) => z.string().trim().regex(PHONE, `${label} is not a valid phone number`);
-const isoDate = (label: string) => z.string().regex(/^\d{4}-\d{2}-\d{2}$/, `${label} is required`);
+const isoDate = (label: string) => z.string().trim()
+  .min(1, `${label} is required`)
+  .transform((value) => normalizeDateInput(value) ?? "")
+  .pipe(z.string().regex(/^\d{4}-\d{2}-\d{2}$/, `${label} must be a valid date (DD/MM/YYYY)`));
 const oneOf = (label: string, list: string[]) => z.string().refine((v) => list.includes(v), `${label} is required`);
 
 const TEXT_FIELDS: Record<string, string> = {
@@ -138,7 +142,7 @@ export async function parseRegistration(fd: FormData): Promise<ParseResult> {
   const kids = group(fd, "children");
   for (let i = 0; i < kids.length; i++) {
     const c = kids[i], tag = `Child ${i + 1}`;
-    const dob = str(c.dob), age = ageFromDob(dob);
+    const dob = normalizeDateInput(str(c.dob)) ?? "", age = ageFromDob(dob);
     const gender = str(c.gender), status = str(c.status), name = str(c.name);
     if (!name || age === null || !["Male", "Female"].includes(gender) || !["Biological", "Adopted"].includes(status)) {
       errors.push(`${tag}: name, valid date of birth, gender and status are required`); continue;

@@ -27,6 +27,15 @@ export function TextField({ id, name, label, required, full, hint, ...rest }:
   );
 }
 
+export function DateField({ id, name, label, required, full, hint = "Use DD/MM/YYYY.", placeholder = "DD/MM/YYYY", ...rest }:
+  Common & Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "name" | "required" | "type">) {
+  return (
+    <Field label={label} htmlFor={id} required={required} full={full} hint={hint}>
+      <input id={id} name={name ?? id} type="text" inputMode="text" placeholder={placeholder} required={required} {...rest} />
+    </Field>
+  );
+}
+
 export function SelectField({ id, name, label, required, full, hint, options, placeholder = "Select", ...rest }:
   Common & { options: (string | { value: string; label: string })[]; placeholder?: string } & Omit<SelectHTMLAttributes<HTMLSelectElement>, "id" | "name" | "required">) {
   return (

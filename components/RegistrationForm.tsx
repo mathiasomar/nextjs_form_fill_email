@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { FileField, SelectField, TextField, Field } from "./fields";
+import { startTransition, useEffect, useRef, useState, type FormEvent } from "react";
+import { DateField, FileField, SelectField, TextField, Field } from "./fields";
 import { SignaturePad } from "./SignaturePad";
 import { counties, subCounties, districtsOf, DIVISIONS, subLocationMap, NOT_LISTED } from "@/lib/locations";
 import { ageFromDob, compressImage, todayLocal } from "@/lib/client-utils";
@@ -33,7 +33,10 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
   const nextId = useRef(1);
   const nomineesRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { const t = todayLocal(); setAppDate(t); setSigDate(t); }, []);
+  useEffect(() => {
+    const date = todayLocal().split("-").reverse().join("/");
+    startTransition(() => { setAppDate(date); setSigDate(date); });
+  }, []);
 
   const recalcNominees = () => {
     const inputs = nomineesRef.current?.querySelectorAll<HTMLInputElement>('input[name$="[benefit]"]');
@@ -92,9 +95,9 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
           {memberType === "origin" && (
             <TextField id="memberCode" label="Existing member code" required placeholder="Enter assigned code" />
           )}
-          <TextField id="applicationDate" label="Application date" type="date" required value={appDate} onChange={(e) => setAppDate(e.target.value)} />
+          <DateField id="applicationDate" label="Application date" required value={appDate} onChange={(e) => setAppDate(e.target.value)} />
           <TextField id="memberName" label="Full name as on National ID" required autoComplete="name" />
-          <TextField id="dob" label="Date of birth" type="date" required />
+          <DateField id="dob" label="Date of birth" required />
           <TextField id="idno" label="National ID number" required autoComplete="off" />
           <SelectField id="birthCounty" label="County of birth" required placeholder="Select county of birth" options={counties}
             value={county} onChange={(e) => { setCounty(e.target.value); setSubCounty(""); setDistrict(""); setDivision(""); setSubLoc(""); }} />
@@ -267,7 +270,7 @@ export function RegistrationForm({ onSuccess }: { onSuccess: (reference: string)
         <p>I declare that the information provided is accurate to the best of my knowledge and agree to abide by the rules and responsibilities of Luo Truckers Association.</p>
         <div className="grid">
           <TextField id="declarant" label="Member full name" required />
-          <TextField id="signatureDate" label="Declaration date" type="date" required value={sigDate} onChange={(e) => setSigDate(e.target.value)} />
+          <DateField id="signatureDate" label="Declaration date" required value={sigDate} onChange={(e) => setSigDate(e.target.value)} />
           <div className="field full">
             <label>Member signature (draw with finger or mouse) <span className="req">*</span></label>
             <SignaturePad onChange={setSignature} />
@@ -297,7 +300,7 @@ function ChildCard({ id, position, onRemove }: { id: number; position: number; o
         <button type="button" className="btn remove" onClick={onRemove}>Remove</button></div>
       <div className="grid">
         <TextField id={`child-${id}-name`} name={n("name")} label="Child full name" required />
-        <TextField id={`child-${id}-dob`} name={n("dob")} label="Date of birth (as on birth document)" type="date" required
+        <DateField id={`child-${id}-dob`} name={n("dob")} label="Date of birth (as on birth document)" required
           value={dob} onChange={(e) => setDob(e.target.value)} />
         <Field label="Calculated age" htmlFor={`child-${id}-age`}>
           <input id={`child-${id}-age`} readOnly value={age ?? ""} placeholder="Auto-calculated" />

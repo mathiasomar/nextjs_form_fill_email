@@ -1,10 +1,12 @@
-/** Age in whole years today from a YYYY-MM-DD string, or null if invalid. */
+import { normalizeDateInput } from "./date";
+
+/** Age in whole years today from a DD/MM/YYYY or YYYY-MM-DD string, or null if invalid. */
 export function ageFromDob(dob: string): number | null {
-  if (!dob) return null;
-  const d = new Date(dob + "T00:00:00");
-  if (Number.isNaN(d.getTime())) return null;
+  const normalized = normalizeDateInput(dob);
+  if (!normalized) return null;
+  const [year, month, day] = normalized.split("-").map(Number);
   const now = new Date();
-  let age = now.getFullYear() - d.getFullYear();
-  if (now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) age--;
+  let age = now.getFullYear() - year;
+  if (now.getMonth() < month - 1 || (now.getMonth() === month - 1 && now.getDate() < day)) age--;
   return age;
 }
